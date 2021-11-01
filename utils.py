@@ -12,6 +12,11 @@ def parse_bool(val):
     elif val=="False": return False
     else: raise argparse.ArgumentTypeError("True or False expected.")
 
+def parse_strategy(val):
+    if val not in ['greedy', 'sampling', 'top-k', 'top-p']:
+        raise argparse.ArgumentTypeError("greedy or sampling or top-k or top-k expected.")
+    return val
+
 def load_model(model):
     if model=="kogpt2":
         tokenizer=PreTrainedTokenizerFast.from_pretrained(
@@ -25,3 +30,16 @@ def load_model(model):
         model=GPT2LMHeadModel.from_pretrained('skt/kogpt2-base-v2')
 
     return tokenizer, model
+
+def load_tokenizer(model):
+    if model=="kogpt2":
+        tokenizer=PreTrainedTokenizerFast.from_pretrained(
+            'skt/kogpt2-base-v2',
+            bos_token='</s>',
+            eos_token='</s>',
+            unk_token='<unk>',
+            pad_token='<pad>',
+            mask_token='<mask>'
+        )
+
+    return tokenizer
